@@ -1,18 +1,71 @@
+/* reset.css */
 * {
   margin: 0;
   padding: 0;
 }
 
-p {
+p,
+a {
   font-family: "Roboto", sans-serif;
   font-weight: 500;
 }
-/* Component Anime Card */
+
+h2 {
+  color: #ba201f;
+  font-family: Caveat Brush;
+  font-size: 60px;
+  font-weight: 400;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Home */
+
+.background {
+  background-image: linear-gradient(
+      rgba(255, 255, 255, 0.2),
+      rgba(255, 255, 255, 0.2)
+    ),
+    url("./images/patternGalerie.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  padding-top: 10px;
+}
+.carousel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.carousel button {
+  width: 36px;
+  height: 39px;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(
+      318deg,
+      rgba(0, 0, 0, 0.4) 0%,
+      rgba(255, 255, 255, 0.4) 105.18%
+    ),
+    #fff;
+  background-blend-mode: soft-light, normal;
+  box-shadow: 5px 5px 10px 0px #a6abbd, -5px -5px 10px 0px #fafbff;
+  cursor: pointer;
+}
 
 .anime-card-carousel {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  overflow: hidden;
+  justify-content: center;
+  width: 100%;
 }
 
 .anime-card {
@@ -25,14 +78,13 @@ p {
 
 .image-container {
   position: relative;
-  margin: 5%;
   height: 100%;
   width: 100%;
 }
 
 .image-container img {
-  width: 100%;
   height: 100%;
+  width: 290px;
   display: block;
   border-radius: 8px;
 }
@@ -58,6 +110,7 @@ p {
   padding: 10px;
   width: calc(100% - 20px);
   height: 150px;
+  border-radius: 0px 0px 8px 8px;
 }
 
 .bottom-section ul {
@@ -66,13 +119,13 @@ p {
 }
 
 .bottom-section ul li {
-  margin-right: 5%;
-  color: #767778;
-  font-size: 13px;
+  color: #6b6b6b;
+  font-size: 14px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
+  margin-right: 10px;
 }
 
 .bottom-section > p {
@@ -88,22 +141,27 @@ p {
   text-overflow: ellipsis;
 }
 
-.button-container {
-  position: absolute;
-  top: 8px;
-  right: 25px;
+.button-addList {
   border-radius: 4px;
   border: #ba201f solid 2px;
   color: #ba201f;
   font-family: Roboto;
-  font-size: 10px;
+  font-size: 20px;
   font-weight: 400;
-  width: 110px;
+  width: 150px;
   cursor: pointer;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   padding: 1%;
+}
+
+.anime-card-carousel .button-addList {
+  position: absolute;
+  top: 8px;
+  right: 25px;
+  font-size: 15px;
+  width: 110px;
 }
 
 .button-container p {
@@ -128,6 +186,7 @@ p {
   padding: 9px 15px;
   justify-content: space-between;
   align-items: center;
+  margin: 30px auto 50px auto;
   flex-shrink: 0;
   border-radius: 8px;
   border: 1px solid #fff;
@@ -144,4 +203,8 @@ p {
 .title-container > div {
   display: flex;
   align-items: center;
+}
+
+.title-container a {
+  color: #ba201f;
 }

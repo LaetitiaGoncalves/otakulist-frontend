@@ -1,42 +1,36 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React from "react";
 import arrowbottom from "../images/arrowbottom.svg";
 
-const AnimeCard = ({ apiTopAnime, apiSeasonal, apiUpcoming, apiAiring }) => {
-  const [animeData, setAnimeData] = useState([]);
+const AnimeCard = ({ currentIndex, itemsPerPage, data }) => {
+  console.log("Data received in AnimeCard:", data);
+  const currentAnimeList = data.slice(
+    currentIndex,
+    currentIndex + itemsPerPage
+  );
+  console.log(`AnimeCard received data:`, data);
+  console.log(
+    `Current slice from ${currentIndex} to ${currentIndex + itemsPerPage}:`,
+    currentAnimeList
+  );
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        let response;
-        if (apiSeasonal) {
-          response = await axios.get(apiSeasonal);
-        } else if (apiTopAnime) {
-          response = await axios.get(apiTopAnime);
-        } else if (apiUpcoming) {
-          response = await axios.get(apiUpcoming);
-        } else {
-          response = await axios.get(apiAiring);
-        }
-        setAnimeData(response.data.data);
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
-    fetchData();
-  }, [apiTopAnime, apiSeasonal, apiUpcoming, apiAiring]);
+  // Si currentAnimeList est vide, il pourrait y avoir un problème
+  if (currentAnimeList.length === 0) {
+    console.error(
+      `No items to display. Check if the slice parameters are correct.`
+    );
+  }
 
   return (
     <div className="anime-card-carousel">
-      {animeData.map((item) => (
-        <div className="anime-card" key={item.id}>
+      {currentAnimeList.map((anime, index) => (
+        <div className="anime-card" key={index}>
           <div className="image-container">
-            <img src={item.images.jpg.large_image_url} alt="" />
+            <img src={anime.images.jpg.large_image_url} alt={anime.title} />
             <div className="top-section">
-              <p>{item.score}</p>
+              <p>{anime.score}</p>
             </div>
             <div className="bottom-section">
-              <div className="button-container">
+              <div className="button-addList">
                 <p> + Add to list</p>
                 <img
                   src={arrowbottom}
@@ -45,15 +39,16 @@ const AnimeCard = ({ apiTopAnime, apiSeasonal, apiUpcoming, apiAiring }) => {
                 />
               </div>
 
-              <p>{item.title_english}</p>
+              <p>{anime.title_english}</p>
               <ul>
-                {item.genres.map((genreItem) => (
-                  <li key={genreItem.id}>{genreItem.name}</li>
-                ))}
+                {anime.genres.map((genre, index) => {
+                  console.log("Rendering genre with id:", genre.id);
+                  return <li key={index}>{genre.name}</li>;
+                })}
               </ul>
               <ul>
-                {item.demographics.map((demoItem) => (
-                  <li key={demoItem.id}>{demoItem.name}</li>
+                {anime.demographics.map((demo, index) => (
+                  <li key={index}>{demo.name}</li>
                 ))}
               </ul>
             </div>
