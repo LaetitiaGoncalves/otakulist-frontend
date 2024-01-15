@@ -36,7 +36,28 @@ const Home = () => {
   const apiUpcoming = "http://localhost:3001/upcoming";
   const apiAiring = "http://localhost:3001/airing";
 
-  // Gestionnaires pour le carousel saisonnier
+  // Fonction tronquer
+
+  const truncateText = (text, maxLength) => {
+    if (text.length <= maxLength) {
+      return text;
+    }
+
+    const endOfSentence = text.lastIndexOf(".", maxLength);
+    if (endOfSentence === -1) {
+      let trimmedText = text.substr(0, maxLength);
+      trimmedText = trimmedText.substr(
+        0,
+        Math.min(trimmedText.length, trimmedText.lastIndexOf(" "))
+      );
+
+      return trimmedText + "..";
+    } else {
+      return text.substr(0, endOfSentence + 1) + "..";
+    }
+  };
+
+  // Fonctions pour le carousel saisonnier
   const handlePreviousSeasonal = () => {
     const newIndex = indexSeasonal - itemsPerPage;
     setIndexSeasonal(newIndex < 0 ? 0 : newIndex);
@@ -128,21 +149,19 @@ const Home = () => {
             {dataAiring.map((data, index) => {
               if (index === 0) {
                 return (
-                  <div>
+                  <div className="banner">
                     <img src={data.trailer.images.maximum_image_url} alt="" />
                     <div>
                       <p>#1 Plus populaire du moment</p>
                       <h1>{data.title_english}</h1>
-                      <p>{data.synopsis}</p>
-                      <div>
+                      <p className={"banner-truncate-text"}>
+                        {truncateText(data.synopsis, 300)}
+                      </p>
+                      <div className="banner-button">
                         <button>En savoir plus</button>
                         <div className="button-addList">
                           <p> + Add to list</p>
-                          <img
-                            src={arrowbottom}
-                            alt="arrow bottom"
-                            style={{ width: "9px", marginTop: "5px" }}
-                          />
+                          <img src={arrowbottom} alt="arrow bottom" />
                         </div>
                       </div>
                     </div>
@@ -151,7 +170,6 @@ const Home = () => {
               }
               return null;
             })}
-            <img src="" alt="" />
           </div>
           <h2>Le meilleur des animés</h2>
           <div className="background">

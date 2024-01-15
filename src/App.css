@@ -39,6 +39,90 @@ h2 {
   background-attachment: fixed;
   padding-top: 10px;
 }
+.banner {
+    position: relative;
+    height: 650px;
+}
+.banner > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+.banner > div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: white; 
+    background-color: rgba(0, 0, 0, 0.6); 
+}
+  
+.banner > div > p:first-child {
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 500;
+    margin: 75px 0px 40px;
+    margin-bottom: 40px;
+  }
+
+  .banner > div h1 {
+    color: #BA201F;
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.75);
+    font-size: 55px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+}
+
+.banner-truncate-text{
+    width: 650px;
+    font-size: 20px;
+    margin-bottom: 60px;
+}
+
+.banner-button {
+display: flex;
+
+}
+
+.banner-button > .button-addList {
+padding: 0%;
+width: 175px;
+height: 41px;
+border: #ba201f solid 4px;
+border-radius: 8px;
+
+}
+
+.banner-button > .button-addList p{
+margin: 0px 0px 0px 0px;
+color: white;
+font-size: 20px;
+}
+
+.banner-button > .button-addList img {
+    width: 30px;
+    height: 10px;
+    filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(356deg) brightness(120%) contrast(103%);
+}
+
+.banner-button button {
+width: 180px;
+height: 45px;
+border-radius: 8px;
+background: #BA201F;
+color: #FFF;
+font-size: 20px;
+font-weight: 600;
+border: none;
+cursor: pointer;
+margin-right: 30px;
+
+
+}
 .carousel {
   display: flex;
   justify-content: space-between;
@@ -85,6 +169,8 @@ h2 {
 .image-container img {
   height: 100%;
   width: 290px;
+  object-fit: cover;
+  object-position: bottom;
   display: block;
   border-radius: 8px;
 }
@@ -154,6 +240,11 @@ h2 {
   justify-content: space-evenly;
   align-items: center;
   padding: 1%;
+}
+
+.button-addList img {
+    width: 9px;
+    height: 5px;
 }
 
 .anime-card-carousel .button-addList {
