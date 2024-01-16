@@ -2,7 +2,6 @@ import React from "react";
 import arrowbottom from "../images/arrowbottom.svg";
 
 const AnimeCard = ({ currentIndex, itemsPerPage, data }) => {
-  console.log("Data received in AnimeCard:", data);
   const currentAnimeList = data.slice(
     currentIndex,
     currentIndex + itemsPerPage
@@ -13,7 +12,6 @@ const AnimeCard = ({ currentIndex, itemsPerPage, data }) => {
     currentAnimeList
   );
 
-  // Si currentAnimeList est vide, il pourrait y avoir un problème
   if (currentAnimeList.length === 0) {
     console.error(
       `No items to display. Check if the slice parameters are correct.`

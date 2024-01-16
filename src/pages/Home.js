@@ -16,9 +16,10 @@ import ArrowLeft from "../images/arrowLeft.svg";
 import ArrowRight from "../images/arrowRight.svg";
 import arrowbottom from "../images/arrowbottom.svg";
 
-const Home = () => {
+const Home = ({ search }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentSeason, setCurrentSeason] = useState("");
+  const [dataSearch, setDataSearch] = useState([]);
   const [dataSeasonal, setDataSeasonal] = useState([]);
   const [dataUpcoming, setDataUpcoming] = useState([]);
   const [dataTopAnime, setDataTopAnime] = useState([]);
@@ -27,14 +28,17 @@ const Home = () => {
   const [indexUpcoming, setIndexUpcoming] = useState(0);
   const [indexTopAnime, setIndexTopAnime] = useState(0);
   const [indexAiring, setIndexAiring] = useState(0);
+  let filteredData = [];
 
   const itemsPerPage = 3;
 
   // URLs d'API
+
+  const apiSearch = "http://localhost:3001/searchanime";
   const apiTopAnime = "http://localhost:3001/topanime";
   const apiSeasonal = "http://localhost:3001/seasonal";
   const apiUpcoming = "http://localhost:3001/upcoming";
-  const apiAiring = "http://localhost:3001/airing";
+  const apiAiring = "http://localhost:3001/seasonal"; //airing modifiée en upcoming pour cause de bug aip
 
   // Fonction tronquer
 
@@ -44,16 +48,10 @@ const Home = () => {
     }
 
     const endOfSentence = text.lastIndexOf(".", maxLength);
-    if (endOfSentence === -1) {
-      let trimmedText = text.substr(0, maxLength);
-      trimmedText = trimmedText.substr(
-        0,
-        Math.min(trimmedText.length, trimmedText.lastIndexOf(" "))
-      );
-
-      return trimmedText + "..";
-    } else {
+    if (endOfSentence !== -1) {
       return text.substr(0, endOfSentence + 1) + "..";
+    } else {
+      return text.substr(0, maxLength);
     }
   };
 
@@ -130,6 +128,8 @@ const Home = () => {
         setDataTopAnime(responseTopAnime.data.data);
         const responseAiring = await axios.get(apiAiring);
         setDataAiring(responseAiring.data.data);
+        const responseSearch = await axios.get(apiSearch);
+        setDataSearch(responseSearch.data.data);
 
         setIsLoading(false);
       } catch (error) {
@@ -137,7 +137,27 @@ const Home = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [search]);
+
+  const renderSearchResults = () => {
+    const filteredData = search
+      ? dataSearch.filter((item) =>
+          item.nom.toLowerCase().includes(search.toLowerCase())
+        )
+      : [];
+
+    return filteredData.map((data, index) => (
+      <AnimeCard key={index} data={data} />
+    ));
+  };
+
+  const renderDefault = () => (
+    <div>
+      <h2>Le meilleur des animés</h2>
+
+      <div className="carousel container"></div>
+    </div>
+  );
 
   return (
     <div>
@@ -152,16 +172,18 @@ const Home = () => {
                   <div className="banner">
                     <img src={data.trailer.images.maximum_image_url} alt="" />
                     <div>
-                      <p>#1 Plus populaire du moment</p>
-                      <h1>{data.title_english}</h1>
-                      <p className={"banner-truncate-text"}>
-                        {truncateText(data.synopsis, 300)}
-                      </p>
-                      <div className="banner-button">
-                        <button>En savoir plus</button>
-                        <div className="button-addList">
-                          <p> + Add to list</p>
-                          <img src={arrowbottom} alt="arrow bottom" />
+                      <div className="banner-content">
+                        <p>#1 Plus populaire du moment</p>
+                        <h1>{truncateText(data.title_english, 25)}</h1>
+                        <p className={"banner-truncate-text"}>
+                          {truncateText(data.synopsis, 400)}
+                        </p>
+                        <div className="banner-button">
+                          <button>En savoir plus</button>
+                          <div className="button-addList">
+                            <p> + Add to list</p>
+                            <img src={arrowbottom} alt="arrow bottom" />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -172,6 +194,7 @@ const Home = () => {
             })}
           </div>
           <h2>Le meilleur des animés</h2>
+
           <div className="background">
             <div className="title-container container">
               <div>
@@ -270,9 +293,10 @@ const Home = () => {
                 <img src={ArrowRight} alt="" />
               </button>
             </div>
+            <div />
+            <h2>Les dernières news</h2>
+            <h2>Les animés awards de 2024</h2>
           </div>
-          <h2>Les dernières news</h2>
-          <h2>Les animés awards de 2024</h2>
         </>
       )}
     </div>
