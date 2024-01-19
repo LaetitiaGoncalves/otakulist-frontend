@@ -1,14 +1,21 @@
 import logo from "../images/logo.svg";
 import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const Header = ({ onSearch }) => {
   const [inputValue, setInputValue] = useState("");
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    onSearch(inputValue);
+  const handleChange = (e) => {
+    setInputValue(e.target.value);
+    console.log(e.target.value);
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSearch(inputValue);
+    console.log(inputValue);
+  };
+
   return (
     <header>
       <div className="header-container">
@@ -39,7 +46,7 @@ const Header = ({ onSearch }) => {
               type="text"
               placeholder="Rechercher..."
               value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
+              onChange={handleChange}
             />
             <button type="submit">Submit</button>
           </form>

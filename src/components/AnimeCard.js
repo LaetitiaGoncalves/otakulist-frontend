@@ -1,16 +1,10 @@
 import React from "react";
 import arrowbottom from "../images/arrowbottom.svg";
 
-const AnimeCard = ({ currentIndex, itemsPerPage, data }) => {
-  const currentAnimeList = data.slice(
-    currentIndex,
-    currentIndex + itemsPerPage
-  );
-  console.log(`AnimeCard received data:`, data);
-  console.log(
-    `Current slice from ${currentIndex} to ${currentIndex + itemsPerPage}:`,
-    currentAnimeList
-  );
+const AnimeCard = ({ data, currentIndex = 0, itemsPerPage = data.length }) => {
+  const currentAnimeList = Array.isArray(data)
+    ? data.slice(currentIndex, currentIndex + itemsPerPage)
+    : [data];
 
   if (currentAnimeList.length === 0) {
     console.error(
@@ -40,7 +34,6 @@ const AnimeCard = ({ currentIndex, itemsPerPage, data }) => {
               <p>{anime.title_english}</p>
               <ul>
                 {anime.genres.map((genre, index) => {
-                  console.log("Rendering genre with id:", genre.id);
                   return <li key={index}>{genre.name}</li>;
                 })}
               </ul>

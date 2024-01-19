@@ -12,7 +12,7 @@ function App() {
     <Router>
       <Header onSearch={setSearch} />
       <Routes>
-        <Route path="/" element={<Home onSearch={setSearch} />} />
+        <Route path="/" element={<Home search={search} />} />
       </Routes>
     </Router>
   );

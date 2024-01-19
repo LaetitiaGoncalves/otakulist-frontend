@@ -20,6 +20,8 @@ const Home = ({ search }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentSeason, setCurrentSeason] = useState("");
   const [dataSearch, setDataSearch] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+
   const [dataSeasonal, setDataSeasonal] = useState([]);
   const [dataUpcoming, setDataUpcoming] = useState([]);
   const [dataTopAnime, setDataTopAnime] = useState([]);
@@ -28,7 +30,7 @@ const Home = ({ search }) => {
   const [indexUpcoming, setIndexUpcoming] = useState(0);
   const [indexTopAnime, setIndexTopAnime] = useState(0);
   const [indexAiring, setIndexAiring] = useState(0);
-  let filteredData = [];
+  const [indexSearch, setIndexSearch] = useState(0);
 
   const itemsPerPage = 3;
 
@@ -38,7 +40,7 @@ const Home = ({ search }) => {
   const apiTopAnime = "http://localhost:3001/topanime";
   const apiSeasonal = "http://localhost:3001/seasonal";
   const apiUpcoming = "http://localhost:3001/upcoming";
-  const apiAiring = "http://localhost:3001/seasonal"; //airing modifiée en upcoming pour cause de bug aip
+  const apiAiring = "http://localhost:3001/seasonal"; //airing modifiée en upcoming pour cause de bug api
 
   // Fonction tronquer
 
@@ -55,7 +57,8 @@ const Home = ({ search }) => {
     }
   };
 
-  // Fonctions pour le carousel saisonnier
+  // Fonctions pour les carousels
+
   const handlePreviousSeasonal = () => {
     const newIndex = indexSeasonal - itemsPerPage;
     setIndexSeasonal(newIndex < 0 ? 0 : newIndex);
@@ -98,6 +101,15 @@ const Home = ({ search }) => {
     setIndexAiring(newIndex >= dataAiring.length ? indexAiring : newIndex);
   };
 
+  const handlePreviousSearch = () => {
+    const newIndex = indexSearch - itemsPerPage;
+    setIndexSearch(newIndex < 0 ? 0 : newIndex);
+  };
+  const handleNextSearch = () => {
+    const newIndex = indexSearch + itemsPerPage;
+    setIndexSearch(newIndex >= dataSearch.length ? indexSearch : newIndex);
+  };
+
   useEffect(() => {
     const getSeason = () => {
       const currentDate = new Date();
@@ -118,6 +130,7 @@ const Home = ({ search }) => {
   }, []);
 
   useEffect(() => {
+    console.log("Search term:", search);
     const fetchData = async () => {
       try {
         const responseSeasonal = await axios.get(apiSeasonal);
@@ -128,8 +141,16 @@ const Home = ({ search }) => {
         setDataTopAnime(responseTopAnime.data.data);
         const responseAiring = await axios.get(apiAiring);
         setDataAiring(responseAiring.data.data);
-        const responseSearch = await axios.get(apiSearch);
-        setDataSearch(responseSearch.data.data);
+
+        if (search) {
+          const responseSearch = await axios.get(
+            `${apiSearch}?search=${search}`
+          );
+          console.log("API Search response:", responseSearch.data.data);
+          setDataSearch(responseSearch.data.data);
+        } else {
+          setDataSearch([]);
+        }
 
         setIsLoading(false);
       } catch (error) {
@@ -139,25 +160,18 @@ const Home = ({ search }) => {
     fetchData();
   }, [search]);
 
-  const renderSearchResults = () => {
-    const filteredData = search
-      ? dataSearch.filter((item) =>
-          item.nom.toLowerCase().includes(search.toLowerCase())
+  useEffect(() => {
+    const newFilteredData = search
+      ? dataSearch.filter(
+          (item) =>
+            item.title_english &&
+            item.title_english.toLowerCase().includes(search.toLowerCase())
         )
-      : [];
+      : dataSearch;
 
-    return filteredData.map((data, index) => (
-      <AnimeCard key={index} data={data} />
-    ));
-  };
-
-  const renderDefault = () => (
-    <div>
-      <h2>Le meilleur des animés</h2>
-
-      <div className="carousel container"></div>
-    </div>
-  );
+    setFilteredData(newFilteredData);
+    console.log("filteredData", newFilteredData);
+  }, [search, dataSearch]);
 
   return (
     <div>
@@ -165,138 +179,156 @@ const Home = ({ search }) => {
         <p>En cours de chargement</p>
       ) : (
         <>
-          <div>
-            {dataAiring.map((data, index) => {
-              if (index === 0) {
-                return (
-                  <div className="banner">
-                    <img src={data.trailer.images.maximum_image_url} alt="" />
-                    <div>
-                      <div className="banner-content">
-                        <p>#1 Plus populaire du moment</p>
-                        <h1>{truncateText(data.title_english, 25)}</h1>
-                        <p className={"banner-truncate-text"}>
-                          {truncateText(data.synopsis, 400)}
-                        </p>
-                        <div className="banner-button">
-                          <button>En savoir plus</button>
-                          <div className="button-addList">
-                            <p> + Add to list</p>
-                            <img src={arrowbottom} alt="arrow bottom" />
-                          </div>
+          {dataAiring.map((data, index) => {
+            if (index === 0) {
+              return (
+                <div className="banner">
+                  <img src={data.trailer.images.maximum_image_url} alt="" />
+                  <div>
+                    <div className="banner-content">
+                      <p>#1 Plus populaire du moment</p>
+                      <h1>{truncateText(data.title_english, 25)}</h1>
+                      <p className={"banner-truncate-text"}>
+                        {truncateText(data.synopsis, 400)}
+                      </p>
+                      <div className="banner-button">
+                        <button>En savoir plus</button>
+                        <div className="button-addList">
+                          <p> + Add to list</p>
+                          <img src={arrowbottom} alt="arrow bottom" />
                         </div>
                       </div>
                     </div>
                   </div>
-                );
-              }
-              return null;
-            })}
-          </div>
-          <h2>Le meilleur des animés</h2>
+                </div>
+              );
+            }
+            return null;
+          })}
 
-          <div className="background">
-            <div className="title-container container">
-              <div>
-                {currentSeason === "Winter" ? (
-                  <img src={snowflake} alt="snowflake" />
-                ) : currentSeason === "Fall" ? (
-                  <img src={feuillederable} alt="feuille d'érable" />
-                ) : currentSeason === "Spring" ? (
-                  <img src={sakura} alt="fleur de sakura" />
-                ) : (
-                  <img src={sun} alt="soleil" />
-                )}
-                <h3>Animés de la saison</h3>
-              </div>
-              <a href="/">Voir plus</a>
-            </div>
+          {filteredData.length > 0 ? (
             <div className="carousel container">
-              <button onClick={handlePreviousSeasonal}>
+              <button onClick={handlePreviousSearch}>
                 <img src={ArrowLeft} alt="" />
               </button>
-              {dataSeasonal.length > 0 && (
+              {filteredData.map((item, index) => (
                 <AnimeCard
-                  currentIndex={indexSeasonal}
+                  key={index}
+                  data={item}
+                  currentIndex={indexSearch}
                   itemsPerPage={itemsPerPage}
-                  data={dataSeasonal}
                 />
-              )}
-              <button onClick={handleNextSeasonal}>
+              ))}
+              <button onClick={handleNextSearch}>
                 <img src={ArrowRight} alt="" />
               </button>
             </div>
+          ) : (
+            <>
+              <h2>Le meilleur des animés</h2>
+              <div className="background">
+                <div className="title-container container">
+                  <div>
+                    {currentSeason === "Winter" ? (
+                      <img src={snowflake} alt="snowflake" />
+                    ) : currentSeason === "Fall" ? (
+                      <img src={feuillederable} alt="feuille d'érable" />
+                    ) : currentSeason === "Spring" ? (
+                      <img src={sakura} alt="fleur de sakura" />
+                    ) : (
+                      <img src={sun} alt="soleil" />
+                    )}
+                    <h3>Animés de la saison</h3>
+                  </div>
+                  <a href="/">Voir plus</a>
+                </div>
+                <div className="carousel container">
+                  <button onClick={handlePreviousSeasonal}>
+                    <img src={ArrowLeft} alt="" />
+                  </button>
+                  {dataSeasonal.length > 0 && (
+                    <AnimeCard
+                      currentIndex={indexSeasonal}
+                      itemsPerPage={itemsPerPage}
+                      data={dataSeasonal}
+                    />
+                  )}
+                  <button onClick={handleNextSeasonal}>
+                    <img src={ArrowRight} alt="" />
+                  </button>
+                </div>
 
-            <div className="title-container container">
-              <div>
-                <img src={feu} alt="flamme" />
-                <h3>Animés les plus attendus</h3>
+                <div className="title-container container">
+                  <div>
+                    <img src={feu} alt="flamme" />
+                    <h3>Animés les plus attendus</h3>
+                  </div>
+                  <a href="/">Voir plus</a>
+                </div>
+                <div className="carousel container">
+                  <button onClick={handlePreviousUpComing}>
+                    <img src={ArrowLeft} alt="" />
+                  </button>
+                  {dataUpcoming.length > 0 && (
+                    <AnimeCard
+                      currentIndex={indexUpcoming}
+                      itemsPerPage={itemsPerPage}
+                      data={dataUpcoming}
+                    />
+                  )}
+                  <button onClick={handleNextUpComing}>
+                    <img src={ArrowRight} alt="" />
+                  </button>
+                </div>
+                <div className="title-container container">
+                  <div>
+                    <img src={medaille} alt="medaille" />
+                    <h3>Top 100 des meilleurs animés</h3>
+                  </div>
+                  <a href="/">Voir plus</a>
+                </div>
+                <div className="carousel container">
+                  <button onClick={handlePreviousTopAnime}>
+                    <img src={ArrowLeft} alt="" />
+                  </button>
+                  {dataTopAnime.length > 0 && (
+                    <AnimeCard
+                      currentIndex={indexTopAnime}
+                      itemsPerPage={itemsPerPage}
+                      data={dataTopAnime}
+                    />
+                  )}
+                  <button onClick={handleNextTopAnime}>
+                    <img src={ArrowRight} alt="" />
+                  </button>
+                </div>
+                <div className="title-container container">
+                  <div>
+                    <img src={augmenter} alt="flèche en hausse" />
+                    <h3>Animés les plus populaires du moment</h3>
+                  </div>
+                  <a href="/">Voir plus</a>
+                </div>
+                <div className="carousel container">
+                  <button onClick={handlePreviousAiring}>
+                    <img src={ArrowLeft} alt="" />
+                  </button>
+                  {dataAiring.length > 0 && (
+                    <AnimeCard
+                      currentIndex={indexAiring}
+                      itemsPerPage={itemsPerPage}
+                      data={dataAiring}
+                    />
+                  )}
+                  <button onClick={handleNextAiring}>
+                    <img src={ArrowRight} alt="" />
+                  </button>
+                </div>
               </div>
-              <a href="/">Voir plus</a>
-            </div>
-            <div className="carousel container">
-              <button onClick={handlePreviousUpComing}>
-                <img src={ArrowLeft} alt="" />
-              </button>
-              {dataUpcoming.length > 0 && (
-                <AnimeCard
-                  currentIndex={indexUpcoming}
-                  itemsPerPage={itemsPerPage}
-                  data={dataUpcoming}
-                />
-              )}
-              <button onClick={handleNextUpComing}>
-                <img src={ArrowRight} alt="" />
-              </button>
-            </div>
-            <div className="title-container container">
-              <div>
-                <img src={medaille} alt="medaille" />
-                <h3>Top 100 des meilleurs animés</h3>
-              </div>
-              <a href="/">Voir plus</a>
-            </div>
-            <div className="carousel container">
-              <button onClick={handlePreviousTopAnime}>
-                <img src={ArrowLeft} alt="" />
-              </button>
-              {dataTopAnime.length > 0 && (
-                <AnimeCard
-                  currentIndex={indexTopAnime}
-                  itemsPerPage={itemsPerPage}
-                  data={dataTopAnime}
-                />
-              )}
-              <button onClick={handleNextTopAnime}>
-                <img src={ArrowRight} alt="" />
-              </button>
-            </div>
-            <div className="title-container container">
-              <div>
-                <img src={augmenter} alt="flèche en hausse" />
-                <h3>Animés les plus populaires du moment</h3>
-              </div>
-              <a href="/">Voir plus</a>
-            </div>
-            <div className="carousel container">
-              <button onClick={handlePreviousAiring}>
-                <img src={ArrowLeft} alt="" />
-              </button>
-              {dataAiring.length > 0 && (
-                <AnimeCard
-                  currentIndex={indexAiring}
-                  itemsPerPage={itemsPerPage}
-                  data={dataAiring}
-                />
-              )}
-              <button onClick={handleNextAiring}>
-                <img src={ArrowRight} alt="" />
-              </button>
-            </div>
-            <div />
-            <h2>Les dernières news</h2>
-            <h2>Les animés awards de 2024</h2>
-          </div>
+              <h2>Les dernières news</h2>
+              <h2>Les animés awards de 2024</h2>
+            </>
+          )}
         </>
       )}
     </div>
