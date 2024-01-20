@@ -1,4 +1,5 @@
 import logo from "../images/logo.svg";
+import loupe from "../images/loupe.svg";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
@@ -38,9 +39,6 @@ const Header = ({ onSearch }) => {
           <Link>
             <p>News</p>
           </Link>
-          <Link>
-            <p>Ma Liste</p>
-          </Link>
           <form onSubmit={handleSubmit}>
             <input
               type="text"
@@ -48,8 +46,13 @@ const Header = ({ onSearch }) => {
               value={inputValue}
               onChange={handleChange}
             />
-            <button type="submit">Submit</button>
+            <button type="submit">
+              <img src={loupe} alt="" />
+            </button>
           </form>
+          <Link>
+            <p>Profile</p>
+          </Link>
         </div>
       </div>
     </header>

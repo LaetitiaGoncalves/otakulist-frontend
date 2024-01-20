@@ -110,6 +110,9 @@ const Home = ({ search }) => {
     setIndexSearch(newIndex >= dataSearch.length ? indexSearch : newIndex);
   };
 
+  const isLastPage = indexSearch + itemsPerPage >= filteredData.length;
+  const isFirstPage = indexSearch === 0;
+
   useEffect(() => {
     const getSeason = () => {
       const currentDate = new Date();
@@ -207,22 +210,32 @@ const Home = ({ search }) => {
           })}
 
           {filteredData.length > 0 ? (
-            <div className="carousel container">
-              <button onClick={handlePreviousSearch}>
-                <img src={ArrowLeft} alt="" />
-              </button>
-              {filteredData.map((item, index) => (
-                <AnimeCard
-                  key={index}
-                  data={item}
-                  currentIndex={indexSearch}
-                  itemsPerPage={itemsPerPage}
-                />
-              ))}
-              <button onClick={handleNextSearch}>
-                <img src={ArrowRight} alt="" />
-              </button>
-            </div>
+            <>
+              <a href="/">Retour</a>
+              <h2>Résultats de la recherche pour "{search}"</h2>
+              <div className="background">
+                <div className="carousel container">
+                  <button onClick={handlePreviousSearch} disabled={isFirstPage}>
+                    <img src={ArrowLeft} alt="" />
+                  </button>
+                  <div className="anime-card-carousel">
+                    {filteredData
+                      .slice(indexSearch, indexSearch + itemsPerPage)
+                      .map((item, index) => (
+                        <AnimeCard
+                          key={index}
+                          data={item}
+                          currentIndex={indexSearch}
+                          itemsPerPage={itemsPerPage}
+                        />
+                      ))}
+                  </div>
+                  <button onClick={handleNextSearch} disabled={isLastPage}>
+                    <img src={ArrowRight} alt="" />
+                  </button>
+                </div>
+              </div>
+            </>
           ) : (
             <>
               <h2>Le meilleur des animés</h2>

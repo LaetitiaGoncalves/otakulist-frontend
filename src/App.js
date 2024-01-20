@@ -5,6 +5,7 @@ import { useState } from "react";
 //Pages
 import Home from "./pages/Home";
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 function App() {
   const [search, setSearch] = useState("");
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home search={search} />} />
       </Routes>
+      <Footer />
     </Router>
   );
 }
