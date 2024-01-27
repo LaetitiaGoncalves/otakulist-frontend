@@ -6,6 +6,7 @@ import { useState } from "react";
 import Home from "./pages/Home";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import Anime from "./pages/Anime";
 
 function App() {
   const [search, setSearch] = useState("");
@@ -14,6 +15,7 @@ function App() {
       <Header onSearch={setSearch} />
       <Routes>
         <Route path="/" element={<Home search={search} />} />
+        <Route path="/anime/:id" element={<Anime />} />
       </Routes>
       <Footer />
     </Router>

@@ -24,7 +24,7 @@ const Header = ({ onSearch }) => {
           <img src={logo} alt="logo Otakulist" className="logo-header" />
         </Link>
         <div className="header-links">
-          <Link>
+          <Link to="/">
             <p>Home</p>
           </Link>
           <Link>

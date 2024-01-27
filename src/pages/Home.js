@@ -40,7 +40,7 @@ const Home = ({ search }) => {
   const apiTopAnime = "http://localhost:3001/topanime";
   const apiSeasonal = "http://localhost:3001/seasonal";
   const apiUpcoming = "http://localhost:3001/upcoming";
-  const apiAiring = "http://localhost:3001/seasonal"; //airing modifiée en upcoming pour cause de bug api
+  const apiAiring = "http://localhost:3001/upcoming"; //airing modifiée en upcoming pour cause de bug api
 
   // Fonction tronquer
 
@@ -133,7 +133,6 @@ const Home = ({ search }) => {
   }, []);
 
   useEffect(() => {
-    console.log("Search term:", search);
     const fetchData = async () => {
       try {
         const responseSeasonal = await axios.get(apiSeasonal);
@@ -182,33 +181,6 @@ const Home = ({ search }) => {
         <p>En cours de chargement</p>
       ) : (
         <>
-          {dataAiring.map((data, index) => {
-            if (index === 0) {
-              return (
-                <div className="banner">
-                  <img src={data.trailer.images.maximum_image_url} alt="" />
-                  <div>
-                    <div className="banner-content">
-                      <p>#1 Plus populaire du moment</p>
-                      <h1>{truncateText(data.title_english, 25)}</h1>
-                      <p className={"banner-truncate-text"}>
-                        {truncateText(data.synopsis, 400)}
-                      </p>
-                      <div className="banner-button">
-                        <button>En savoir plus</button>
-                        <div className="button-addList">
-                          <p> + Add to list</p>
-                          <img src={arrowbottom} alt="arrow bottom" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            }
-            return null;
-          })}
-
           {filteredData.length > 0 ? (
             <>
               <a href="/">Retour</a>
@@ -238,6 +210,59 @@ const Home = ({ search }) => {
             </>
           ) : (
             <>
+              {dataAiring.map((data, index) => {
+                if (index === 0) {
+                  return (
+                    <div className="banner">
+                      <div>
+                        <div className="banner-content">
+                          <p>#1 Plus populaire du moment</p>
+                          <h1>{truncateText(data.title_english, 25)}</h1>
+                          <p className={"banner-truncate-text"}>
+                            {truncateText(data.synopsis, 400)}
+                          </p>
+                          <div className="banner-button">
+                            <button>En savoir plus</button>
+                            <div className="button-addList">
+                              <p> + Add to list</p>
+                              <img src={arrowbottom} alt="arrow bottom" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="banner-img">
+                        <div style={{ width: "800px", height: "600px" }}>
+                          <img
+                            src={data.images.jpg.large_image_url}
+                            alt=""
+                            className="img-banner-back"
+                          />
+                          <div className="white-overlay"></div>
+                        </div>
+
+                        <div
+                          style={{
+                            width: "400px",
+                            height: "600px",
+                            position: "absolute",
+                            top: "0",
+                            left: "50%",
+                            transform: "translateX(-50%)",
+                            overflow: "hidden",
+                          }}
+                        >
+                          <img
+                            src={data.images.jpg.large_image_url}
+                            alt=""
+                            className="img-banner-front"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+                return null;
+              })}
               <h2>Le meilleur des animés</h2>
               <div className="background">
                 <div className="title-container container">

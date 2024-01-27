@@ -1,7 +1,9 @@
 import React from "react";
 import arrowbottom from "../images/arrowbottom.svg";
+import { useNavigate } from "react-router-dom";
 
 const AnimeCard = ({ data, currentIndex = 0, itemsPerPage = data.length }) => {
+  const navigate = useNavigate();
   const currentAnimeList = Array.isArray(data)
     ? data.slice(currentIndex, currentIndex + itemsPerPage)
     : [data];
@@ -15,7 +17,14 @@ const AnimeCard = ({ data, currentIndex = 0, itemsPerPage = data.length }) => {
   return (
     <div className="anime-card-carousel">
       {currentAnimeList.map((anime, index) => (
-        <div className="anime-card" key={index}>
+        <div
+          className="anime-card"
+          key={index}
+          onClick={(event) => {
+            event.preventDefault();
+            navigate(`/anime/${anime.mal_id}`);
+          }}
+        >
           <div className="image-container">
             <img src={anime.images.jpg.large_image_url} alt={anime.title} />
             <div className="top-section">
