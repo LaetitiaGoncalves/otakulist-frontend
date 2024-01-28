@@ -490,3 +490,88 @@ margin-right: 30px;
     width: 36%;
     padding: 1.5% 1.5% 1.5% 3%;
 }
+
+.info-section {
+padding: 5% 5% 0 5%;
+}
+
+.title-score {
+    display: flex;
+    justify-content: space-between;
+}
+
+.title-score h1 {
+    color: #BA201F;
+    font-family: Bangers;
+    font-size: 80px;
+    font-weight: 400;
+    text-transform: uppercase;
+    max-width: 70%;
+}
+
+.anime-page-buttons {
+    display: flex;
+}
+
+.anime-page-description {
+    display: flex;
+    justify-content: space-between;
+}
+
+.anime-page-description div:first-child {
+    width: 60%;
+    color: #767778;
+    font-family: Roboto;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    padding: 2% 0% 0% 0%;
+}
+
+.anime-page-description div:last-child {
+    color: #767778;
+    font-family: Roboto;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    padding-top: 2%;
+    width: 35%;
+}
+
+.anime-page-description div:last-child p {
+    padding-bottom: 2%;
+    font-weight: 700;
+}
+
+.anime-page-description div:last-child span {
+   padding: 0% 0% 2% 2%;
+   font-weight: 400;
+}
+
+.anime-page-images h2 {
+text-align: left;
+font-size: 70px;
+}
+
+.anime-page-images div {
+    display: flex;
+    overflow: hidden;
+    height: 250px;
+}
+
+.anime-page-images img {
+    width: 250px;
+    object-fit: cover;
+    padding-right: 2%;
+}
+
+.anime-page-trailer  h2{
+    text-align: left;
+}
+
+.iframe {
+    display: flex;
+    justify-content: center;
+}

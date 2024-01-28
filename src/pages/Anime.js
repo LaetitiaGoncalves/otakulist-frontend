@@ -2,10 +2,17 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
+//import pictures
+import similarity from "../images/similarity.svg";
+
+//import components
+import AnimeCard from "../components/AnimeCard";
+
 const Anime = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState();
   const [dataImages, setDataImages] = useState();
+  const [dataRecommandation, setDataRecommandation] = useState([]);
   const { id } = useParams();
 
   useEffect(() => {
@@ -17,9 +24,16 @@ const Anime = () => {
         setData(responseData.data.data);
 
         const responseImages = await axios.get(
-          `https://api.jikan.moe/v4/anime/${id}/pictures`
+          `http://localhost:3001/anime/pictures/${id}`
         );
         setDataImages(responseImages.data);
+
+        const responseRecommandations = await axios.get(
+          `http://localhost:3001/anime/recommandations/${id}`
+        );
+        console.log(responseRecommandations.data);
+        setDataRecommandation(responseRecommandations.data.data);
+
         setIsLoading(false);
       };
 
@@ -36,6 +50,21 @@ const Anime = () => {
     const index = synopsis.toLowerCase().indexOf(cutWord.toLowerCase());
     return index !== -1 ? synopsis.substring(0, index) : synopsis;
   };
+
+  //Fonction pour adapter les data à envoyer à AnimeData
+
+  const adaptedData =
+    dataRecommandation && dataRecommandation.length > 0
+      ? dataRecommandation.map((item) => {
+          return {
+            title_english: item.entry.title,
+            large_image_url: item.entry.images.jpg.large_image_url,
+            score: item.entry.score || "N/A",
+            genres: item.entry.genres || [],
+            demographics: item.entry.demographics || [],
+          };
+        })
+      : [];
 
   return (
     <div>
@@ -60,7 +89,7 @@ const Anime = () => {
             </div>
           </div>
           <div className="info-section">
-            <div className="title&score">
+            <div className="title-score">
               <h1>{data.title_english}</h1>
               <div>
                 <div className="score">
@@ -78,11 +107,13 @@ const Anime = () => {
             <div className="anime-page-description">
               <div>{cutSynopsis(data.synopsis)}</div>
               <div>
-                <p>Status : {data.status}</p>
+                <p>
+                  Status : <span>{data.status}</span>
+                </p>
                 <p>
                   Genres :
                   {data.genres.map((genre, index) => {
-                    return <p key="index">{genre.name}</p>;
+                    return <span key={index}>{genre.name}</span>;
                   })}
                 </p>
                 {data.demographics && data.demographics.length > 0 ? (
@@ -96,20 +127,26 @@ const Anime = () => {
                     ))}
                   </p>
                 ) : (
-                  <p>Catégorie : Non définie</p>
+                  <p>
+                    Catégorie :<span>Non définie</span>
+                  </p>
                 )}
-                <p>Episodes : {data.episodes}</p>
-                <p>Age conseillé : {data.rating}</p>
+                <p>
+                  Episodes :<span>{data.episodes}</span>
+                </p>
+                <p>
+                  Age conseillé :<span>{data.rating}</span>
+                </p>
                 <p>
                   Studio d'animation :
                   {data.studios.map((studio, index) => {
-                    return <p key="index">{studio.name}</p>;
+                    return <span key={index}>{studio.name}</span>;
                   })}
                 </p>
                 <p>
                   Plateforme :
                   {data.streaming.map((streaming, index) => {
-                    return <p key="index">{streaming.name}</p>;
+                    return <span key={index}>{streaming.name}</span>;
                   })}
                 </p>
               </div>
@@ -119,22 +156,31 @@ const Anime = () => {
               <div>
                 {dataImages.data.map((image, index) => {
                   return (
-                    <img src={image.jpg.large_image_url} alt="" key="index" />
+                    <img src={image.jpg.large_image_url} alt="" key={index} />
                   );
                 })}
               </div>
             </div>
             <div className="anime-page-trailer">
               <h2>Trailer</h2>
-              <iframe
-                width="1240"
-                height="648"
-                src={data.trailer.embed_url}
-                frameBorder="0"
-                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
+              <div className="iframe">
+                <iframe
+                  width="1240"
+                  height="648"
+                  src={data.trailer.embed_url}
+                  frameBorder="0"
+                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              </div>
             </div>
+            <div className="title-container">
+              <div>
+                <img src={similarity} alt="logo presque égal" />
+                <h3>Animés similaires</h3>
+              </div>
+            </div>
+            {dataRecommandation.length > 0 && <AnimeCard data={adaptedData} />}
           </div>
         </>
       )}

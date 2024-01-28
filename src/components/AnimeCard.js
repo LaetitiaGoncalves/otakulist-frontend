@@ -26,9 +26,12 @@ const AnimeCard = ({ data, currentIndex = 0, itemsPerPage = data.length }) => {
           }}
         >
           <div className="image-container">
-            <img src={anime.images.jpg.large_image_url} alt={anime.title} />
+            <img
+              src={anime.images?.jpg?.large_image_url || anime.large_image_url}
+              alt={anime.title_english || anime.title}
+            />
             <div className="top-section">
-              <p>{anime.score}</p>
+              {anime.score !== "N/A" && <p>{anime.score}</p>}
             </div>
             <div className="bottom-section">
               <div className="button-addList">

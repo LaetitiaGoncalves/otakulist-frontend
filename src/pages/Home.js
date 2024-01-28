@@ -37,10 +37,10 @@ const Home = ({ search }) => {
   // URLs d'API
 
   const apiSearch = "http://localhost:3001/searchanime";
-  const apiTopAnime = "http://localhost:3001/topanime";
+  const apiTopAnime = "http://localhost:3001/topanime"; //modifié car trop de requetes
   const apiSeasonal = "http://localhost:3001/seasonal";
   const apiUpcoming = "http://localhost:3001/upcoming";
-  const apiAiring = "http://localhost:3001/upcoming"; //airing modifiée en upcoming pour cause de bug api
+  const apiAiring = "http://localhost:3001/airing"; //airing modifiée en upcoming pour cause de bug api
 
   // Fonction tronquer
 
