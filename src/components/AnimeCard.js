@@ -9,10 +9,13 @@ const AnimeCard = ({ data, currentIndex = 0, itemsPerPage = data.length }) => {
     : [data];
 
   if (currentAnimeList.length === 0) {
-    console.error(
-      `No items to display. Check if the slice parameters are correct.`
-    );
+    console.error(`No items to display`);
   }
+
+  const handleClick = (animeId) => {
+    navigate(`/anime/${animeId}`);
+    window.scrollTo(0, 0);
+  };
 
   return (
     <div className="anime-card-carousel">
@@ -20,10 +23,7 @@ const AnimeCard = ({ data, currentIndex = 0, itemsPerPage = data.length }) => {
         <div
           className="anime-card"
           key={index}
-          onClick={(event) => {
-            event.preventDefault();
-            navigate(`/anime/${anime.mal_id}`);
-          }}
+          onClick={() => handleClick(anime.mal_id)}
         >
           <div className="image-container">
             <img

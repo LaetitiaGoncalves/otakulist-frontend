@@ -4,6 +4,8 @@ import axios from "axios";
 
 //import pictures
 import similarity from "../images/similarity.svg";
+import ArrowLeft from "../images/arrowLeft.svg";
+import ArrowRight from "../images/arrowRight.svg";
 
 //import components
 import AnimeCard from "../components/AnimeCard";
@@ -13,7 +15,11 @@ const Anime = () => {
   const [data, setData] = useState();
   const [dataImages, setDataImages] = useState();
   const [dataRecommandation, setDataRecommandation] = useState([]);
+  const [index, setIndex] = useState(0);
+
   const { id } = useParams();
+  const itemsPerPage = 3;
+  const imagesPerPage = 4;
 
   useEffect(() => {
     try {
@@ -57,6 +63,7 @@ const Anime = () => {
     dataRecommandation && dataRecommandation.length > 0
       ? dataRecommandation.map((item) => {
           return {
+            mal_id: item.entry.mal_id,
             title_english: item.entry.title,
             large_image_url: item.entry.images.jpg.large_image_url,
             score: item.entry.score || "N/A",
@@ -65,6 +72,26 @@ const Anime = () => {
           };
         })
       : [];
+
+  //Fonctions pour les carousels
+
+  const isFirstPage = index === 0;
+  const isLastPage = index + itemsPerPage >= adaptedData.length;
+  const isLastPageImages =
+    index + imagesPerPage >= (dataImages?.data?.length || 0);
+
+  const handleNextImages = () => {
+    const newIndex = index + imagesPerPage;
+    setIndex(isLastPageImages ? index : newIndex);
+  };
+  const handlePrevious = () => {
+    const newIndex = index - itemsPerPage;
+    setIndex(newIndex < 0 ? 0 : newIndex);
+  };
+  const handleNext = () => {
+    const newIndex = index + itemsPerPage;
+    setIndex(newIndex >= dataRecommandation.length ? index : newIndex);
+  };
 
   return (
     <div>
@@ -153,12 +180,27 @@ const Anime = () => {
             </div>
             <div className="anime-page-images">
               <h2>Images</h2>
-              <div>
-                {dataImages.data.map((image, index) => {
-                  return (
-                    <img src={image.jpg.large_image_url} alt="" key={index} />
-                  );
-                })}
+              <div className="carousel">
+                <button onClick={handlePrevious} disabled={isFirstPage}>
+                  <img src={ArrowLeft} alt="" />
+                </button>
+                <div className="anime-card-carousel">
+                  {dataImages.data
+                    .slice(index, index + imagesPerPage)
+                    .map((image, index) => {
+                      return (
+                        <img
+                          className="anime-card-carousel-img"
+                          src={image.jpg.large_image_url}
+                          alt=""
+                          key={index}
+                        />
+                      );
+                    })}
+                </div>
+                <button onClick={handleNextImages} disabled={isLastPageImages}>
+                  <img src={ArrowRight} alt="" />
+                </button>
               </div>
             </div>
             <div className="anime-page-trailer">
@@ -180,7 +222,23 @@ const Anime = () => {
                 <h3>Animés similaires</h3>
               </div>
             </div>
-            {dataRecommandation.length > 0 && <AnimeCard data={adaptedData} />}
+            <div className="carousel container">
+              <button onClick={handlePrevious} disabled={isFirstPage}>
+                <img src={ArrowLeft} alt="" />
+              </button>
+              <div className="anime-card-carousel">
+                {dataRecommandation.length > 0 && (
+                  <AnimeCard
+                    data={adaptedData}
+                    currentIndex={index}
+                    itemsPerPage={itemsPerPage}
+                  />
+                )}
+              </div>
+              <button onClick={handleNext} disabled={isLastPage}>
+                <img src={ArrowRight} alt="" />
+              </button>
+            </div>
           </div>
         </>
       )}

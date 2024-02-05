@@ -1,10 +1,12 @@
 import logo from "../images/logo.svg";
 import loupe from "../images/loupe.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-const Header = ({ onSearch }) => {
+const Header = () => {
   const [inputValue, setInputValue] = useState("");
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setInputValue(e.target.value);
@@ -13,8 +15,9 @@ const Header = ({ onSearch }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSearch(inputValue);
-    console.log(inputValue);
+    const searchTerm = inputValue.toLowerCase();
+    navigate(`/search/${searchTerm}`);
+    setInputValue("");
   };
 
   return (

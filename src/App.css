@@ -287,7 +287,7 @@ margin-right: 30px;
 }
 
 .carousel button {
-  width: 36px;
+  width: 39px;
   height: 39px;
   border-radius: 8px;
   border: none;
@@ -315,6 +315,7 @@ margin-right: 30px;
   height: 360px;
   margin: 20px;
   max-width: 290px;
+  cursor: pointer;
 }
 
 .image-container {
@@ -507,6 +508,7 @@ padding: 5% 5% 0 5%;
     font-weight: 400;
     text-transform: uppercase;
     max-width: 70%;
+    padding-bottom: 2%;
 }
 
 .anime-page-buttons {
@@ -553,25 +555,45 @@ padding: 5% 5% 0 5%;
 .anime-page-images h2 {
 text-align: left;
 font-size: 70px;
+padding-bottom: 2%;
 }
 
 .anime-page-images div {
-    display: flex;
-    overflow: hidden;
     height: 250px;
 }
 
-.anime-page-images img {
+.anime-card-carousel-img {
     width: 250px;
     object-fit: cover;
-    padding-right: 2%;
+ 
 }
 
-.anime-page-trailer  h2{
+.anime-card-carousel-img:not(:last-child) {
+    padding-right: 4%;
+}
+
+
+.anime-page-trailer h2{
     text-align: left;
+    padding-bottom: 2%;
 }
 
 .iframe {
     display: flex;
     justify-content: center;
+    padding-bottom: 2%;
+}
+
+/* Search page */
+
+.search-page > h1 {
+    color: #BA201F;
+    font-family: Bangers;
+    font-size: 60px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-transform: uppercase;
+    padding-bottom: 3%;
+    text-align: center;
 }
