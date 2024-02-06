@@ -2,9 +2,11 @@ import logo from "../images/logo.svg";
 import loupe from "../images/loupe.svg";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import Signup from "./Signup";
 
 const Header = () => {
   const [inputValue, setInputValue] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -18,6 +20,10 @@ const Header = () => {
     const searchTerm = inputValue.toLowerCase();
     navigate(`/search/${searchTerm}`);
     setInputValue("");
+  };
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
   };
 
   return (
@@ -53,9 +59,10 @@ const Header = () => {
               <img src={loupe} alt="" />
             </button>
           </form>
-          <Link>
+          <Link onClick={toggleModal}>
             <p>Profile</p>
           </Link>
+          <Signup isOpen={isModalOpen} onClose={toggleModal} />
         </div>
       </div>
     </header>
