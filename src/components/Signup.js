@@ -2,6 +2,9 @@ import { useState } from "react";
 import axios from "axios";
 import luffy from "../images/luffy.png";
 import closeRound from "../images/closeRound.svg";
+import upload from "../images/upload.svg";
+import { Link } from "react-router-dom";
+import Login from "./Login";
 
 const Signup = ({ isOpen, onClose }) => {
   const [username, setUserName] = useState("");
@@ -11,6 +14,8 @@ const Signup = ({ isOpen, onClose }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,7 +40,10 @@ const Signup = ({ isOpen, onClose }) => {
           }
         );
         if (response.data) {
-          onClose();
+          setShowSuccessMessage(true);
+          setTimeout(() => {
+            onClose();
+          }, 5000);
         }
       } else {
         setErrorMessage("Please fill in all fields.");
@@ -49,100 +57,123 @@ const Signup = ({ isOpen, onClose }) => {
     }
   };
 
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
   return isOpen ? (
     <div className="modal-background">
       <div className="modal-content">
-        <div className="modal-form">
-          <h2>Sign Up</h2>
-          <form onSubmit={handleSubmit}>
-            <label htmlFor="username">Username</label>
-            <input
-              type="text"
-              name="username"
-              placeholder="Saisissez votre username"
-              value={username}
-              onChange={(e) => setUserName(e.target.value)}
-            />
-            <label htmlFor="email">Email</label>
-            <input
-              type="text"
-              name="email"
-              placeholder="Saisissez votre email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+        {showSuccessMessage ? (
+          <div className="modal-success-message">
+            <h2>Félicitations!</h2>
+            <p>Votre compte a été créé avec succès.</p>
+          </div>
+        ) : (
+          <div className="modal-form">
+            <h2>Sign Up</h2>
+            <form onSubmit={handleSubmit}>
+              <label htmlFor="username">Username</label>
+              <input
+                type="text"
+                name="username"
+                placeholder="Saisissez votre username"
+                value={username}
+                onChange={(e) => setUserName(e.target.value)}
+              />
+              <label htmlFor="email">Email</label>
+              <input
+                type="text"
+                name="email"
+                placeholder="Saisissez votre email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
 
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              placeholder="Password..."
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <label htmlFor="confirmPassword">Confirm password</label>
-            <input
-              type="password"
-              name="confirmPassword"
-              id="confirmPassword"
-              placeholder="Confirm password..."
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-            {password === confirmPassword ? (
-              ""
-            ) : (
-              <p
-                style={{
-                  fontSize: "12px",
-                  color: "#FF4655",
-                  padding: "5px 0px 10px 0px",
-                }}
-              >
-                Passwords did not match
-              </p>
-            )}
-            <div className="addPhoto">
-              {avatar ? (
-                <>
-                  <label>
-                    <input
-                      type="file"
-                      style={{ display: "none" }}
-                      onChange={(event) => {
-                        setAvatar(event.target.files[0]);
-                        setPreview(URL.createObjectURL(event.target.files[0]));
-                      }}
-                    />
-                    Choose your Avatar
-                  </label>
-
-                  <img src={preview} alt="" style={{ width: "50px" }} />
-                </>
+              <label htmlFor="password">Password</label>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                placeholder="Password..."
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <label htmlFor="confirmPassword">Confirm password</label>
+              <input
+                type="password"
+                name="confirmPassword"
+                id="confirmPassword"
+                placeholder="Confirm password..."
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+              {password === confirmPassword ? (
+                ""
               ) : (
-                <p>No file selected</p>
+                <p
+                  style={{
+                    fontSize: "12px",
+                    color: "#FF4655",
+                    padding: "5px 0px 10px 0px",
+                  }}
+                >
+                  Passwords did not match
+                </p>
               )}
-            </div>
-            <button type="submit">Créer un compte</button>
-          </form>
-          <p>
-            Vous avez déjà un compte? <span>Se connecter</span>
-          </p>
-        </div>
+              <div className="addPhoto">
+                <label>
+                  <input
+                    type="file"
+                    style={{ display: "none" }}
+                    onChange={(event) => {
+                      setAvatar(event.target.files[0]);
+                      setPreview(URL.createObjectURL(event.target.files[0]));
+                    }}
+                  />
+                  Choose your Avatar
+                  <img src={upload} alt="upload icon" />
+                </label>
+                {preview ? (
+                  <img
+                    src={preview}
+                    alt=""
+                    style={{
+                      width: "50px",
+                      height: "50px",
+                      borderRadius: "50%",
+                      objectFit: "cover",
+                    }}
+                  />
+                ) : (
+                  <p>No file uploaded</p>
+                )}
+              </div>
+
+              <button type="submit">Créer un compte</button>
+            </form>
+
+            <p>
+              Vous avez déjà un compte?
+              <Link onClick={toggleModal}>Se connecter</Link>
+            </p>
+            <Login isOpen={isModalOpen} onClose={toggleModal} />
+            <p
+              style={{
+                fontSize: "12px",
+                color: "#FF4655",
+                padding: "5px 0px 10px 0px",
+                marginBottom: "10%",
+              }}
+            >
+              {errorMessage}
+            </p>
+          </div>
+        )}
         <div className="modal-picture">
           <img src={closeRound} alt="Close" onClick={onClose} />
           <img src={luffy} alt="Luffy" />
         </div>
-        <p
-          style={{
-            fontSize: "12px",
-            color: "#FF4655",
-            padding: "5px 0px 10px 0px",
-          }}
-        >
-          {errorMessage}
-        </p>
       </div>
     </div>
   ) : null;

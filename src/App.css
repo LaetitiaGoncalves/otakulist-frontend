@@ -49,7 +49,7 @@ header {
     align-items: center;
 }
 
-.header-links a {
+.header-links > a {
     color: #767778;
     font-family: Roboto;
     font-size: 20px;
@@ -57,7 +57,7 @@ header {
     text-decoration: none;
 }
 
-header > form {
+.header-links > form {
     border-radius: 8px;
     background: #FFF;
     box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.25);
@@ -66,12 +66,12 @@ header > form {
     align-items: center;
 }
 
-header form input {
+.header-links> form > input {
     border: none;
     margin-right: 10px;
 }
 
-header form button {
+.header-links> form > button {
     border: none;
     background-color: transparent;
     cursor: pointer;
@@ -613,10 +613,28 @@ padding-bottom: 2%;
     z-index: 1000;
   }
   
-  .modal-content h2 {
+  .modal-content > h2 {
     text-align: left;
     margin: 40px 0px 20px 0px;
   }
+
+  .modal-form > p {
+    color: #767778;
+    font-family: Roboto;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  } 
+
+  .modal-form > p > a {
+    color: #BA201F;
+    font-family: Roboto;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  } 
 
   .modal-content {
     background: white;
@@ -630,20 +648,35 @@ padding-bottom: 2%;
   .modal-form > form {
     display: flex;
     flex-direction: column;
+
   }
 
   .modal-form {
     width: 30%;
     padding-left: 2%;
   }
+  .modal-form > form > button {
+    border-radius: 8px;
+    background: #BA201F;
+    height: 40px;
+    color: #FFF;
+    font-family: Roboto;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    border: none;
+    width: 70%;
+    margin: 5% 0%;
+  }
 
   .modal-form > form > input {
-    width: 290px;
     height: 30px;
     border-radius: 8px;
     border: 2px solid #BA201F;
     padding: 1%;
     margin-bottom: 5%;
+    width: 67%;
 
   }
 
@@ -668,6 +701,27 @@ padding-bottom: 2%;
     position: absolute;
     top: 2%;
     right: 2%;
+  }
+
+  .addPhoto {
+    display: flex;
+    align-items: center;
+  }
+
+  .addPhoto > label {
+    width: 200px;
+    display: flex;
+    align-items: center;
+    color: #767778;
+    font-family: Roboto;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+
+  .addPhoto > label > img {
+    margin-left: 3%;
   }
 
   
