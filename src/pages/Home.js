@@ -147,7 +147,7 @@ const Home = () => {
           {dataAiring.map((data, index) => {
             if (index === 0) {
               return (
-                <div className="banner">
+                <div className="banner" key="index">
                   <div>
                     <div className="banner-content">
                       <p>#1 Plus populaire du moment</p>

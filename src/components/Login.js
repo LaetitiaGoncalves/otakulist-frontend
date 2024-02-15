@@ -19,7 +19,8 @@ const Login = ({ isOpen, onClose }) => {
         email: email,
         password: password,
       });
-      if (response.data.token) {
+      if (response.data.token && response.data._id) {
+        localStorage.setItem("userId", response.data._id);
         setShowSuccessMessage(true);
         setTimeout(() => {
           onClose();
