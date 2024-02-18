@@ -218,7 +218,7 @@ const Home = () => {
               <button onClick={handlePreviousSeasonal}>
                 <img src={ArrowLeft} alt="" />
               </button>
-              {dataSeasonal.length > 0 && (
+              {dataSeasonal && dataSeasonal.length > 0 && (
                 <AnimeCard
                   currentIndex={indexSeasonal}
                   itemsPerPage={itemsPerPage}
@@ -241,7 +241,7 @@ const Home = () => {
               <button onClick={handlePreviousUpComing}>
                 <img src={ArrowLeft} alt="" />
               </button>
-              {dataUpcoming.length > 0 && (
+              {dataUpcoming && dataUpcoming.length > 0 && (
                 <AnimeCard
                   currentIndex={indexUpcoming}
                   itemsPerPage={itemsPerPage}
@@ -263,7 +263,7 @@ const Home = () => {
               <button onClick={handlePreviousTopAnime}>
                 <img src={ArrowLeft} alt="" />
               </button>
-              {dataTopAnime.length > 0 && (
+              {dataTopAnime && dataTopAnime.length > 0 && (
                 <AnimeCard
                   currentIndex={indexTopAnime}
                   itemsPerPage={itemsPerPage}
@@ -285,7 +285,7 @@ const Home = () => {
               <button onClick={handlePreviousAiring}>
                 <img src={ArrowLeft} alt="" />
               </button>
-              {dataAiring.length > 0 && (
+              {dataAiring && dataAiring.length > 0 && (
                 <AnimeCard
                   currentIndex={indexAiring}
                   itemsPerPage={itemsPerPage}

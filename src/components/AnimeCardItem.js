@@ -4,40 +4,52 @@ import arrowbottom from "../images/arrowbottom.svg";
 const AnimeCardItem = ({ anime, onClick }) => {
   const [status, setStatus] = useState("");
 
-  const handleStatusChange = (e) => {
-    setStatus(e.target.value);
+  const handleStatusChange = async (e) => {
+    const newStatus = e.target.value;
+    setStatus(newStatus);
+    console.log(`Nouveau statut sélectionné : ${newStatus}`);
+    await updateAnimeStatus(newStatus);
   };
 
-  const stopClickPropagation = (e) => {
-    e.stopPropagation();
-  };
-
-  const addToFavorites = async (e) => {
+  const updateAnimeStatus = async (newStatus) => {
     const userId = localStorage.getItem("userId");
-    console.log(userId);
+    const token = localStorage.getItem("userToken");
+
+    console.log(`UserID depuis localStorage : ${userId}`);
+    console.log(`Token depuis localStorage : ${token}`);
+    console.log(
+      `Envoi de la requête avec : userID=${userId}, animeId=${anime.mal_id}, title=${anime.title_english}, image=${anime.images?.jpg?.large_image_url}, status=${newStatus}`
+    );
+
+    if (!userId || !token) {
+      console.log("User not logged in");
+      return;
+    }
 
     try {
-      const response = await fetch("http://localhost:3001/liste", {
-        method: "POST",
+      const response = await fetch(`http://localhost:3001/list`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           userId,
+          animeId: anime.mal_id,
           title: anime.title_english,
           image: anime.images?.jpg?.large_image_url,
-          status,
+          status: newStatus,
         }),
       });
 
       if (!response.ok) {
-        throw new Error("Something went wrong");
+        throw new Error(`Erreur avec la requête : Statut ${response.status}`);
       }
 
       const result = await response.json();
-      console.log(result);
+      console.log("Réponse réussie de la requête : ", result);
     } catch (error) {
-      console.error("Failed to add to favorites:", error);
+      console.error("Erreur lors de la mise à jour/ajout de l'anime:", error);
     }
   };
 
@@ -57,7 +69,7 @@ const AnimeCardItem = ({ anime, onClick }) => {
           <select
             value={status}
             onChange={handleStatusChange}
-            onClick={stopClickPropagation}
+            onClick={(e) => e.stopPropagation()}
             style={{ cursor: "pointer", marginTop: "5px" }}
           >
             <option value="">Add to Favorites</option>
@@ -65,15 +77,6 @@ const AnimeCardItem = ({ anime, onClick }) => {
             <option value="watching">Watching</option>
             <option value="toWatch">To Watch</option>
           </select>
-          <button
-            onClick={(e) => {
-              addToFavorites();
-              e.stopPropagation();
-            }}
-            style={{ cursor: "pointer" }}
-          >
-            Add
-          </button>
         </div>
         <p>{anime.title_english}</p>
         <ul>
