@@ -1,25 +1,55 @@
-import React, { useState } from "react";
-import arrowbottom from "../images/arrowbottom.svg";
+import React, { useState, useEffect } from "react";
 
 const AnimeCardItem = ({ anime, onClick }) => {
   const [status, setStatus] = useState("");
+  const [animeList, setAnimeList] = useState([]);
 
-  const handleStatusChange = async (e) => {
-    const newStatus = e.target.value;
-    setStatus(newStatus);
-    console.log(`Nouveau statut sélectionné : ${newStatus}`);
-    await updateAnimeStatus(newStatus);
+  const fetchList = async () => {
+    const userId = localStorage.getItem("userId");
+    const token = localStorage.getItem("userToken");
+
+    if (!userId || !token) {
+      console.log("User not logged in");
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:3001/list/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erreur avec la requête : Statut ${response.status}`);
+      }
+
+      const list = await response.json();
+      setAnimeList(list);
+
+      list.forEach((item) => {
+        console.log(
+          `Comparaison des identifiants: animeId de la liste=${item.anime_id}, animeId du composant=${anime.mal_id}`
+        );
+        if (item.anime_id === anime.mal_id) {
+          setStatus(item.status);
+          console.log(
+            `Statut actuel de l'anime dans la liste : ${item.status}`
+          );
+        }
+      });
+    } catch (error) {
+      console.error("Erreur lors de la récupération de la liste :", error);
+    }
   };
+
+  useEffect(() => {
+    fetchList();
+  }, [anime.mal_id]);
 
   const updateAnimeStatus = async (newStatus) => {
     const userId = localStorage.getItem("userId");
     const token = localStorage.getItem("userToken");
-
-    console.log(`UserID depuis localStorage : ${userId}`);
-    console.log(`Token depuis localStorage : ${token}`);
-    console.log(
-      `Envoi de la requête avec : userID=${userId}, animeId=${anime.mal_id}, title=${anime.title_english}, image=${anime.images?.jpg?.large_image_url}, status=${newStatus}`
-    );
 
     if (!userId || !token) {
       console.log("User not logged in");
@@ -48,9 +78,16 @@ const AnimeCardItem = ({ anime, onClick }) => {
 
       const result = await response.json();
       console.log("Réponse réussie de la requête : ", result);
+      fetchList();
     } catch (error) {
       console.error("Erreur lors de la mise à jour/ajout de l'anime:", error);
     }
+  };
+
+  const handleStatusChange = async (e) => {
+    const newStatus = e.target.value;
+    setStatus(newStatus);
+    await updateAnimeStatus(newStatus);
   };
 
   return (
