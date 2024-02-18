@@ -19,21 +19,28 @@ const Login = ({ isOpen, onClose }) => {
         email: email,
         password: password,
       });
+      console.log("Réponse du serveur :", response.data); // Ajout de cette ligne pour déboguer
       if (response.data.token && response.data._id) {
         localStorage.setItem("userId", response.data._id);
+        localStorage.setItem("userToken", response.data.token);
         setShowSuccessMessage(true);
         setTimeout(() => {
           onClose();
         }, 5000);
         navigate("/");
       } else {
-        alert("Une erreur est survenue, veuillez réssayer.");
+        alert("Une erreur est survenue, veuillez réessayer.");
       }
     } catch (error) {
-      if (error.response.status === 401 || error.response.status === 400) {
+      console.log(error);
+      if (
+        error.response &&
+        (error.response.status === 401 || error.response.status === 400)
+      ) {
         setErrorMessage("Email or password invalid");
+      } else {
+        setErrorMessage("An error occurred. Please try again.");
       }
-      console.log(error.message);
     }
   };
 
