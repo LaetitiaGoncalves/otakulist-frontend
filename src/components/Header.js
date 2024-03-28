@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Signup from "./Signup";
 
+
 const Header = () => {
   const [inputValue, setInputValue] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,8 +46,8 @@ const Header = () => {
           <Link>
             <p>Catégories</p>
           </Link>
-          <Link>
-            <p>News</p>
+          <Link to="/list">
+            <p>My List</p>
           </Link>
           <form onSubmit={handleSubmit}>
             <input

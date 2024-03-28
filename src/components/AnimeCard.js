@@ -22,7 +22,7 @@ const AnimeCard = ({
     <div className="anime-card-carousel">
       {currentAnimeList.map((anime, index) => (
         <AnimeCardItem
-          key={index}
+          key={anime.mal_id}
           anime={anime}
           userId={userId}
           onClick={handleClick}
