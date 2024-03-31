@@ -150,7 +150,7 @@ const Signup = ({ isOpen, onClose, onOpenLogin }) => {
             <p>
               Vous avez déjà un compte?{" "}
               <span
-                style={{ cursor: "pointer", color: "#007BFF" }}
+                style={{ cursor: "pointer", color: "#ba201f" }}
                 onClick={() => {
                   onClose(); // Ferme la modal Signup
                   onOpenLogin(); // Ouvre la modal Login

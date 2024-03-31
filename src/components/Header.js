@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import logo from "../images/logo.svg";
-import loupe from "../images/loupe.svg";
 import { Link, useNavigate } from "react-router-dom";
 import Signup from "./Signup";
 import Login from "./Login";
+import logo from "../images/logo.svg";
+import loupe from "../images/loupe.svg";
 
 const Header = () => {
   const [inputValue, setInputValue] = useState("");
@@ -30,35 +30,24 @@ const Header = () => {
           <img src={logo} alt="logo Otakulist" className="logo-header" />
         </Link>
         <div className="header-links">
-          <Link to="/">
-            <p>Home</p>
-          </Link>
-          <Link>
-            <p>Top Anime</p>
-          </Link>
-          <Link>
-            <p>Genres</p>
-          </Link>
-          <Link>
-            <p>Catégories</p>
-          </Link>
-          <Link to="/list">
-            <p>My List</p>
-          </Link>
+          <Link to="/">Home</Link>
+          <Link to="/top-anime">Top Anime</Link>
+          <Link to="/genres">Genres</Link>
+          <Link to="/categories">Categories</Link>
+          <Link to="/list">My List</Link>
           <form onSubmit={handleSubmit}>
             <input
               type="text"
-              placeholder="Rechercher..."
+              placeholder="Search..."
               value={inputValue}
               onChange={handleChange}
             />
             <button type="submit">
-              <img src={loupe} alt="" />
+              <img src={loupe} alt="Search" />
             </button>
           </form>
-
           <div className="profile-menu" onClick={toggleDropdown}>
-            <p>Profile</p>
+            Profile
             {showDropdown && (
               <div className="dropdown-menu">
                 <p onClick={() => setIsSignupModalOpen(true)}>Sign Up</p>
@@ -76,9 +65,14 @@ const Header = () => {
           setIsLoginModalOpen(true);
         }}
       />
+
       <Login
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
+        onOpenSignup={() => {
+          setIsLoginModalOpen(false);
+          setIsSignupModalOpen(true);
+        }}
       />
     </header>
   );

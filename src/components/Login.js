@@ -5,7 +5,7 @@ import luffy from "../images/luffy.png";
 import closeRound from "../images/closeRound.svg";
 import upload from "../images/upload.svg";
 
-const Login = ({ isOpen, onClose }) => {
+const Login = ({ isOpen, onClose, onOpenSignup }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
@@ -77,7 +77,13 @@ const Login = ({ isOpen, onClose }) => {
             </form>
 
             <p>
-              Pas encore de compte? <a href="">Créer un compte</a>
+              Pas encore de compte ?{" "}
+              <span
+                style={{ cursor: "pointer", color: "#ba201f" }} // Style correctement appliqué comme objet
+                onClick={onOpenSignup}
+              >
+                Créer un compte
+              </span>
             </p>
             <p
               style={{
