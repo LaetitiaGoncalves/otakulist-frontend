@@ -718,3 +718,32 @@ footer > div:last-child button {
 .myList {
   justify-content: flex-start;
 }
+
+.carousel-list {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  justify-content: center;
+}
+
+.anime-card {
+  flex: 0 0 auto; /* Cela assure que les cartes ne s'étirent pas pour remplir l'espace */
+  margin-right: 16px; /* Espace entre les cartes */
+}
+
+/* Boutons pour naviguer dans le carousel */
+.carousel-list button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Cache la barre de défilement pour donner l'apparence d'un carousel */
+.carousel-list::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel-list {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
