@@ -1,30 +1,40 @@
+import React, { useState } from "react";
 import logo from "../images/logo.svg";
 import loupe from "../images/loupe.svg";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
 import Signup from "./Signup";
-
+import Login from "./Login"; // Supposons que vous ayez un composant Login
 
 const Header = () => {
   const [inputValue, setInputValue] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [showSignupModal, setShowSignupModal] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setInputValue(e.target.value);
-    console.log(e.target.value);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const searchTerm = inputValue.toLowerCase();
-    navigate(`/search/${searchTerm}`);
+    navigate(`/search/${inputValue.trim().toLowerCase()}`);
     setInputValue("");
   };
 
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
+  const toggleSignupModal = () => {
+    setShowSignupModal(!showSignupModal);
+    setShowDropdown(false); // Fermer le menu déroulant lorsque la modale est ouverte
+  };
+
+  const toggleLoginModal = () => {
+    setShowLoginModal(!showLoginModal);
+    setShowDropdown(false); // Fermer le menu déroulant lorsque la modale est ouverte
+  };
+
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
   };
 
   return (
@@ -57,15 +67,22 @@ const Header = () => {
               onChange={handleChange}
             />
             <button type="submit">
-              <img src={loupe} alt="" />
+              <img src={loupe} alt="Search" />
             </button>
           </form>
-          <Link onClick={toggleModal}>
+          <div className="profile-menu" onClick={toggleDropdown}>
             <p>Profile</p>
-          </Link>
-          <Signup isOpen={isModalOpen} onClose={toggleModal} />
+            {showDropdown && (
+              <div className="dropdown-menu">
+                <p onClick={toggleSignupModal}>Sign In</p>
+                <p onClick={toggleLoginModal}>Login</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
+      <Signup isOpen={showSignupModal} onClose={toggleSignupModal} />
+      <Login isOpen={showLoginModal} onClose={toggleLoginModal} />
     </header>
   );
 };
