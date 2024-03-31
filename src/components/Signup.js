@@ -1,12 +1,11 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import luffy from "../images/luffy.png";
 import closeRound from "../images/closeRound.svg";
 import upload from "../images/upload.svg";
-import { Link } from "react-router-dom";
-import Login from "./Login";
+// Pas besoin d'importer `Link` ici puisque vous utiliserez une fonction pour gérer le clic.
 
-const Signup = ({ isOpen, onClose }) => {
+const Signup = ({ isOpen, onClose, onOpenLogin }) => {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [avatar, setAvatar] = useState(null);
@@ -15,7 +14,6 @@ const Signup = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,6 +26,7 @@ const Signup = ({ isOpen, onClose }) => {
     formData.append("username", username);
     formData.append("email", email);
     formData.append("password", password);
+
     try {
       if (email && username && password && avatar) {
         const response = await axios.post(
@@ -42,7 +41,7 @@ const Signup = ({ isOpen, onClose }) => {
         if (response.data) {
           setShowSuccessMessage(true);
           setTimeout(() => {
-            onClose();
+            onClose(); // Fermez la modal après un délai
           }, 5000);
         }
       } else {
@@ -55,10 +54,6 @@ const Signup = ({ isOpen, onClose }) => {
         setErrorMessage("An error occurred. Please try again later.");
       }
     }
-  };
-
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
   };
 
   return isOpen ? (
@@ -152,22 +147,23 @@ const Signup = ({ isOpen, onClose }) => {
 
               <button type="submit">Créer un compte</button>
             </form>
-
             <p>
-              Vous avez déjà un compte?
-              <Link onClick={toggleModal}>Se connecter</Link>
+              Vous avez déjà un compte?{" "}
+              <span
+                style={{ cursor: "pointer", color: "#007BFF" }}
+                onClick={() => {
+                  onClose(); // Ferme la modal Signup
+                  onOpenLogin(); // Ouvre la modal Login
+                }}
+              >
+                Se connecter
+              </span>
             </p>
-            <Login isOpen={isModalOpen} onClose={toggleModal} />
-            <p
-              style={{
-                fontSize: "12px",
-                color: "#FF4655",
-                padding: "5px 0px 10px 0px",
-                marginBottom: "10%",
-              }}
-            >
-              {errorMessage}
-            </p>
+            <div className="modal-errors">
+              {errorMessage && (
+                <p style={{ color: "#FF4655" }}>{errorMessage}</p>
+              )}
+            </div>
           </div>
         )}
         <div className="modal-picture">
